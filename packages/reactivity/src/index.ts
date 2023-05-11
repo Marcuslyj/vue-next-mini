@@ -1,1 +1,1 @@
-let d = '67'
+export { reactive } from './reactive'
