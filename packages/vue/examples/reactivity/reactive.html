@@ -13,11 +13,15 @@
       const { reactive, effect } = Vue
       const obj = reactive({ name: 'san' })
       console.log(obj.name)
-      obj.name = 'wao'
+      // obj.name = 'wao'
 
       effect(() => {
         document.querySelector('#app').innerText = obj.name
       })
+
+      setTimeout(() => {
+        obj.name = 'wao'
+      }, 2000)
     </script>
   </body>
 </html>
