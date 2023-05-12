@@ -1,3 +1,18 @@
+export function effect<T = any>(fn: () => T) {
+  const _effect = new ReactiveEffect(fn)
+  _effect.run()
+}
+
+export let activeEffect: ReactiveEffect | undefined
+
+export class ReactiveEffect<T = any> {
+  constructor(public fn: () => T) {}
+  run() {
+    activeEffect = this
+    return this.fn()
+  }
+}
+
 // 怎么感觉是收集（触发）副作用函数？？
 
 /**
