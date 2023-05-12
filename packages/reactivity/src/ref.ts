@@ -28,7 +28,7 @@ class RefImpl<T> {
   }
 
   get value() {
-    trackRefValue(this)
+    // trackRefValue(this)
     return this._value
   }
 
