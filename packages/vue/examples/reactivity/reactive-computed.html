@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="p1"></div>
+    <div id="p2"></div>
+
+    <script>
+      const { reactive, effect, computed } = Vue
+      const obj = reactive({ name: 'san' })
+      const computedName = computed(() => {
+        console.log('计算属性计算')
+        console.log(obj.name)
+        return obj.name + '__computed'
+      })
+      // console.log(obj.name)
+      // obj.name = 'wao'
+
+      effect(() => {
+        document.querySelector('#p1').innerText = computedName.value + 'p1'
+        document.querySelector('#p2').innerText = computedName.value + 'p2'
+      })
+
+      // effect(() => {
+      //   document.querySelector('#p2').innerText = obj.name + 'p2'
+      // })
+
+      setTimeout(() => {
+        obj.name = 'wao'
+      }, 2000)
+    </script>
+  </body>
+</html>

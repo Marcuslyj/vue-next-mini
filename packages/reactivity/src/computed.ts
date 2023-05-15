@@ -12,6 +12,8 @@ export function computed(getterOrOptions: unknown) {
   }
 
   const cRef = new ComputedRefImpl(getter)
+
+  return cRef
 }
 
 export class ComputedRefImpl<T> {
@@ -22,17 +24,24 @@ export class ComputedRefImpl<T> {
   public _dirty: boolean = true
 
   constructor(getter) {
-    this.effect = new ReactiveEffect(getter, () => {
-      if (!this._dirty) {
-        this._dirty = true
-        triggerRefValue(this)
+    this.effect = new ReactiveEffect(
+      getter,
+      //依赖变化时候，都要标记为脏，然后手动触发computed的更新
+      // datas relied on change => dirty true => triggerRefValue
+      () => {
+        console.log('sche...')
+        if (!this._dirty) {
+          this._dirty = true
+          triggerRefValue(this)
+        }
       }
-    })
+    )
     this.effect.computed = this
   }
 
   get value() {
     trackRefValue(this)
+    // 脏的时候再重新计算值
     if (this._dirty) {
       this._dirty = false
       this._value = this.effect.run()

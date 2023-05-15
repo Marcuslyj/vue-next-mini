@@ -14,9 +14,11 @@ export let activeEffect: ReactiveEffect | undefined
 
 export class ReactiveEffect<T = any> {
   computed?: ComputedRefImpl<T>
-  scheduler?: EffectScheduler
 
-  constructor(public fn: () => T, scheduler: EffectScheduler | null = null) {}
+  constructor(
+    public fn: () => T,
+    public scheduler: EffectScheduler | null = null
+  ) {}
   run() {
     activeEffect = this
     return this.fn()
