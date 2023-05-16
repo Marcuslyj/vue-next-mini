@@ -36,6 +36,8 @@ export class ReactiveEffect<T = any> {
     activeEffect = this
     return this.fn()
   }
+
+  stop() {}
 }
 
 // 怎么感觉是收集（触发）副作用函数？？

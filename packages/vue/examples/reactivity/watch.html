@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="p1"></div>
+    <div id="p2"></div>
+
+    <script>
+      const { reactive, effect, computed, queuePreFlushCb, watch } = Vue
+      const obj = reactive({ name: 'aa' })
+
+      watch(
+        obj,
+        (value, oldValue) => {
+          console.log('watch监听被触发========')
+          console.log('oldValue: ', oldValue)
+          console.log('value: ', value)
+        },
+        { immediate: true }
+      )
+
+      setTimeout(() => {
+        obj.name = 'wao'
+      }, 2000)
+      setTimeout(() => {
+        obj.name = 'wao22'
+      }, 4000)
+    </script>
+  </body>
+</html>
