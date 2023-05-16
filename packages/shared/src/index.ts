@@ -1,4 +1,4 @@
-export const isArray = () => Array.isArray
+export const isArray = Array.isArray
 
 export const isObject = (val: unknown) =>
   val !== null && typeof val === 'object'
@@ -8,6 +8,8 @@ export const hasChanged = (value: any, oldValue: any): boolean =>
 
 export const isFunction = (val: unknown): val is Function =>
   typeof val === 'function'
+
+export const isString = (val: unknown): val is string => typeof val === 'string'
 
 export const extend = Object.assign
 
