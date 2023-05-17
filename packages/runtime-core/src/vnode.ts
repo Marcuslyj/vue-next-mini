@@ -76,3 +76,10 @@ export function normalizeChildren(vnode: VNode, children: unknown) {
   // 叠加了children的shapeFlag
   vnode.shapeFlag |= type
 }
+
+/**
+ * 根据 key || type 判断是否为相同类型节点
+ */
+export function isSameVNodeType(n1: VNode, n2: VNode): boolean {
+  return n1.type === n2.type && n1.key === n2.key
+}

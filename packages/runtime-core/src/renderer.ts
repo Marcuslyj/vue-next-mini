@@ -1,5 +1,5 @@
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
-import { Comment, Fragment, Text } from './vnode'
+import { Comment, Fragment, Text, isSameVNodeType } from './vnode'
 import { EMPTY_OBJ, isString } from '@vue/shared'
 
 /**
@@ -572,12 +572,9 @@ function baseCreateRenderer(options: RendererOptions): any {
     }
 
     /**
-     * 判断是否为相同类型节点
+     * 判断是否为相同类型节点，相同类型的节点间才有打补丁的必要，否则卸载旧节点
      */
-    if (
-      oldVNode
-      // && !isSameVNodeType(oldVNode, newVNode)
-    ) {
+    if (oldVNode && !isSameVNodeType(oldVNode, newVNode)) {
       unmount(oldVNode)
       oldVNode = null
     }
@@ -597,7 +594,6 @@ function baseCreateRenderer(options: RendererOptions): any {
         // processFragment(oldVNode, newVNode, container, anchor)
         break
       default:
-        debugger
         if (shapeFlag & ShapeFlags.ELEMENT) {
           processElement(oldVNode, newVNode, container, anchor)
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
