@@ -56,6 +56,7 @@ function baseCreateRenderer(options: RendererOptions): any {
   /**
    * 解构 options，获取所有的兼容性方法
    */
+  // 传入的平台层api
   const {
     insert: hostInsert,
     patchProp: hostPatchProp,
@@ -227,7 +228,7 @@ function baseCreateRenderer(options: RendererOptions): any {
     const newProps = newVNode.props || EMPTY_OBJ
 
     // 更新子节点
-    // patchChildren(oldVNode, newVNode, el, null)
+    patchChildren(oldVNode, newVNode, el, null)
 
     // 更新 props
     patchProps(el, newVNode, oldProps, newProps)
@@ -305,53 +306,53 @@ function baseCreateRenderer(options: RendererOptions): any {
   /**
    * 为子节点打补丁
    */
-  // const patchChildren = (oldVNode, newVNode, container, anchor) => {
-  //   // 旧节点的 children
-  //   const c1 = oldVNode && oldVNode.children
-  //   // 旧节点的 prevShapeFlag
-  //   const prevShapeFlag = oldVNode ? oldVNode.shapeFlag : 0
-  //   // 新节点的 children
-  //   const c2 = newVNode.children
+  const patchChildren = (oldVNode, newVNode, container, anchor) => {
+    // 旧节点的 children
+    const c1 = oldVNode && oldVNode.children
+    // 旧节点的 prevShapeFlag
+    const prevShapeFlag = oldVNode ? oldVNode.shapeFlag : 0
+    // 新节点的 children
+    const c2 = newVNode.children
 
-  //   // 新节点的 shapeFlag
-  //   const { shapeFlag } = newVNode
+    // 新节点的 shapeFlag
+    const { shapeFlag } = newVNode
 
-  //   // 新子节点为 TEXT_CHILDREN
-  //   if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
-  //     // 旧子节点为 ARRAY_CHILDREN
-  //     if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-  //       // TODO: 卸载旧子节点
-  //     }
-  //     // 新旧子节点不同
-  //     if (c2 !== c1) {
-  //       // 挂载新子节点的文本
-  //       hostSetElementText(container, c2 as string)
-  //     }
-  //   } else {
-  //     // 旧子节点为 ARRAY_CHILDREN
-  //     if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-  //       // 新子节点也为 ARRAY_CHILDREN
-  //       if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-  //         // 这里要进行 diff 运算
-  //         patchKeyedChildren(c1, c2, container, anchor)
-  //       }
-  //       // 新子节点不为 ARRAY_CHILDREN，则直接卸载旧子节点
-  //       else {
-  //         // TODO: 卸载
-  //       }
-  //     } else {
-  //       // 旧子节点为 TEXT_CHILDREN
-  //       if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
-  //         // 删除旧的文本
-  //         hostSetElementText(container, '')
-  //       }
-  //       // 新子节点为 ARRAY_CHILDREN
-  //       if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-  //         // TODO: 单独挂载新子节点操作
-  //       }
-  //     }
-  //   }
-  // }
+    // 新子节点为 TEXT_CHILDREN
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      // 旧子节点为 ARRAY_CHILDREN
+      if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        // TODO: 卸载旧子节点
+      }
+      // 新旧子节点不同
+      if (c2 !== c1) {
+        // 挂载新子节点的文本
+        hostSetElementText(container, c2 as string)
+      }
+    } else {
+      // 旧子节点为 ARRAY_CHILDREN
+      if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        // 新子节点也为 ARRAY_CHILDREN
+        if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+          // 这里要进行 diff 运算
+          // patchKeyedChildren(c1, c2, container, anchor)
+        }
+        // 新子节点不为 ARRAY_CHILDREN，则直接卸载旧子节点
+        else {
+          // TODO: 卸载
+        }
+      } else {
+        // 旧子节点为 TEXT_CHILDREN
+        if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
+          // 删除旧的文本
+          hostSetElementText(container, '')
+        }
+        // 新子节点为 ARRAY_CHILDREN
+        if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+          // TODO: 单独挂载新子节点操作
+        }
+      }
+    }
+  }
 
   /**
    * diff

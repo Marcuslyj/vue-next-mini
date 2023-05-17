@@ -3,6 +3,7 @@ import { extend, isString } from '@vue/shared'
 import { patchProp } from './patchProp'
 import { nodeOps } from './nodeOps'
 
+// 平台层api
 const rendererOptions = extend({ patchProp }, nodeOps)
 
 let renderer
