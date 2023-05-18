@@ -141,7 +141,7 @@ function baseCreateRenderer(options: RendererOptions): any {
   const processComponent = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
       // 挂载
-      debugger
+
       /** 比如
        *  {
             render() {
