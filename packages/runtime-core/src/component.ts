@@ -1,7 +1,18 @@
 import { isObject } from '@vue/shared'
 import { reactive } from '@vue/reactivity'
+import { onBeforeMount, onMounted } from './apiLifecycle'
 
 let uid = 0
+
+/**
+ * 生命周期钩子
+ */
+export const enum LifecycleHooks {
+  BEFORE_CREATE = 'bc',
+  CREATED = 'c',
+  BEFORE_MOUNT = 'bm',
+  MOUNTED = 'm',
+}
 
 /**
  * 创建组件实例
@@ -79,16 +90,16 @@ export function finishComponentSetup(instance) {
 function applyOptions(instance: any) {
   const {
     data: dataOptions,
-    // beforeCreate,
-    // created,
-    // beforeMount,
-    // mounted,
+    beforeCreate,
+    created,
+    beforeMount,
+    mounted,
   } = instance.type
 
-  // // hooks
-  // if (beforeCreate) {
-  //   callHook(beforeCreate, instance.data)
-  // }
+  // hooks
+  if (beforeCreate) {
+    callHook(beforeCreate, instance.data)
+  }
 
   // 存在 data 选项时
   if (dataOptions) {
@@ -101,16 +112,24 @@ function applyOptions(instance: any) {
     }
   }
 
-  // // hooks
-  // if (created) {
-  //   callHook(created, instance.data)
-  // }
+  // hooks
+  if (created) {
+    callHook(created, instance.data)
+  }
 
-  // function registerLifecycleHook(register: Function, hook?: Function) {
-  //   register(hook?.bind(instance.data), instance)
-  // }
+  function registerLifecycleHook(register: Function, hook?: Function) {
+    register(hook?.bind(instance.data), instance)
+  }
 
   // // 注册 hooks
-  // registerLifecycleHook(onBeforeMount, beforeMount)
-  // registerLifecycleHook(onMounted, mounted)
+  registerLifecycleHook(onBeforeMount, beforeMount)
+  registerLifecycleHook(onMounted, mounted)
+}
+
+/**
+ * 触发 hooks
+ */
+function callHook(hook: Function, proxy) {
+  // hook.bind(proxy)()
+  hook()
 }
