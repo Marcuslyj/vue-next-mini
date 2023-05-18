@@ -118,6 +118,7 @@ function applyOptions(instance: any) {
   }
 
   function registerLifecycleHook(register: Function, hook?: Function) {
+    // bind支持生命钩子中访问data
     register(hook?.bind(instance.data), instance)
   }
 
@@ -130,6 +131,6 @@ function applyOptions(instance: any) {
  * 触发 hooks
  */
 function callHook(hook: Function, proxy) {
-  // hook.bind(proxy)()
-  hook()
+  // bind支持生命钩子中访问data
+  hook.bind(proxy)()
 }
