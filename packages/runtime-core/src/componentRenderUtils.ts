@@ -54,7 +54,7 @@ export function renderComponentRoot(instance) {
     if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
       // 获取到 result 返回值，如果 render 中使用了 this，则需要修改 this 指向
       // result = normalizeVNode(render!.call(data, data))
-      result = normalizeVNode(render!())
+      result = normalizeVNode(render!.call(data))
     }
   } catch (err) {
     console.error(err)
