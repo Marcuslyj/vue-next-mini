@@ -1,7 +1,11 @@
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 import { Comment, Fragment, Text, isSameVNodeType } from './vnode'
 import { EMPTY_OBJ, isString } from '@vue/shared'
-
+import {
+  // cloneIfMounted,
+  normalizeVNode,
+  // renderComponentRoot
+} from './componentRenderUtils'
 /**
  * 渲染器配置对象
  */
@@ -119,13 +123,13 @@ function baseCreateRenderer(options: RendererOptions): any {
   /**
    * Fragment 的打补丁操作
    */
-  // const processFragment = (oldVNode, newVNode, container, anchor) => {
-  //   if (oldVNode == null) {
-  //     mountChildren(newVNode.children, container, anchor)
-  //   } else {
-  //     patchChildren(oldVNode, newVNode, container, anchor)
-  //   }
-  // }
+  const processFragment = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      mountChildren(newVNode.children, container, anchor)
+    } else {
+      patchChildren(oldVNode, newVNode, container, anchor)
+    }
+  }
 
   /**
    * 组件的打补丁操作
@@ -292,16 +296,16 @@ function baseCreateRenderer(options: RendererOptions): any {
   /**
    * 挂载子节点
    */
-  // const mountChildren = (children, container, anchor) => {
-  //   // 处理 Cannot assign to read only property '0' of string 'xxx'
-  //   if (isString(children)) {
-  //     children = children.split('')
-  //   }
-  //   for (let i = 0; i < children.length; i++) {
-  //     const child = (children[i] = normalizeVNode(children[i]))
-  //     patch(null, child, container, anchor)
-  //   }
-  // }
+  const mountChildren = (children, container, anchor) => {
+    // 处理 Cannot assign to read only property '0' of string 'xxx'
+    if (isString(children)) {
+      children = children.split('')
+    }
+    for (let i = 0; i < children.length; i++) {
+      const child = (children[i] = normalizeVNode(children[i]))
+      patch(null, child, container, anchor)
+    }
+  }
 
   /**
    * 为子节点打补丁
@@ -591,7 +595,7 @@ function baseCreateRenderer(options: RendererOptions): any {
         break
       case Fragment:
         // Fragment
-        // processFragment(oldVNode, newVNode, container, anchor)
+        processFragment(oldVNode, newVNode, container, anchor)
         break
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
