@@ -421,25 +421,27 @@ function baseCreateRenderer(options: RendererOptions): any {
       oldChildrenEnd--
       newChildrenEnd--
     }
-    //   // 3. 新节点多与旧节点时的 diff 比对。
-    //   if (i > oldChildrenEnd) {
-    //     if (i <= newChildrenEnd) {
-    //       const nextPos = newChildrenEnd + 1
-    //       const anchor =
-    //         nextPos < newChildrenLength ? newChildren[nextPos].el : parentAnchor
-    //       while (i <= newChildrenEnd) {
-    //         patch(null, normalizeVNode(newChildren[i]), container, anchor)
-    //         i++
-    //       }
-    //     }
-    //   }
-    //   // 4. 旧节点多与新节点时的 diff 比对。
-    //   else if (i > newChildrenEnd) {
-    //     while (i <= oldChildrenEnd) {
-    //       unmount(oldChildren[i])
-    //       i++
-    //     }
-    //   }
+    // 3. 新节点多与旧节点时的 diff 比对。
+    if (i > oldChildrenEnd) {
+      // 旧节点没了
+      if (i <= newChildrenEnd) {
+        // 新节点还有
+        const nextPos = newChildrenEnd + 1
+        const anchor =
+          nextPos < newChildrenLength ? newChildren[nextPos].el : parentAnchor
+        while (i <= newChildrenEnd) {
+          patch(null, normalizeVNode(newChildren[i]), container, anchor)
+          i++
+        }
+      }
+    }
+    // 4. 旧节点多与新节点时的 diff 比对。
+    else if (i > newChildrenEnd) {
+      while (i <= oldChildrenEnd) {
+        unmount(oldChildren[i])
+        i++
+      }
+    }
     //   // 5. 乱序的 diff 比对
     //   else {
     //     // 旧子节点的开始索引：oldChildrenStart
