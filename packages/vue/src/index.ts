@@ -7,4 +7,4 @@ export {
   Text,
   Comment,
 } from '@vue/runtime-core'
-export { render } from '@vue/runtime-dom'
+export { render, createApp } from '@vue/runtime-dom'

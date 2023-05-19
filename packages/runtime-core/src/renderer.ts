@@ -2,6 +2,7 @@ import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 import { createComponentInstance, setupComponent } from './component'
 import { Comment, Fragment, Text, isSameVNodeType } from './vnode'
 import { EMPTY_OBJ, isString } from '@vue/shared'
+import { createAppAPI } from './apiCreateApp'
 import {
   // cloneIfMounted,
   normalizeVNode,
@@ -636,7 +637,7 @@ function baseCreateRenderer(options: RendererOptions): any {
   }
   return {
     render,
-    // createApp: createAppAPI(render),
+    createApp: createAppAPI(render),
   }
 }
 
