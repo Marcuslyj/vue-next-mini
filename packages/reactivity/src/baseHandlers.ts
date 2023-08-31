@@ -1,11 +1,13 @@
+import { track, trigger } from './effect';
+
 const get = createGetter();
 function createGetter() {
   return function get(target: any, key: string | symbol, receiver: object) {
     // get值
     const res = Reflect.get(target, key, receiver);
 
-    //  TODO：收集依赖
-    // track(target, key);
+    //  收集依赖
+    track(target, key);
 
     return res;
   };
@@ -22,8 +24,8 @@ function createSetter() {
     // set值
     const result = Reflect.set(target, key, value, receiver);
 
-    //  TODO：触发副作用函数
-    // // trigger(target, key,value);
+    //  触发副作用函数
+    trigger(target, key, value);
 
     return result;
   };

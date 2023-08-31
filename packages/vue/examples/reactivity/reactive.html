@@ -12,7 +12,9 @@
       const { reactive } = Vue;
 
       const obj = reactive({ name: 'zhangsan' });
-      console.log(obj);
+      console.log(obj.name);
+
+      obj.name = 'lsa';
     </script>
   </body>
 </html>
