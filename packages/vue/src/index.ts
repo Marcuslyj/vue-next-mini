@@ -1,1 +1,1 @@
-console.log('lala');
+export { reactive } from '@vue/reactivity';
