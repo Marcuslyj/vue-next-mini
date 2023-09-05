@@ -17,6 +17,10 @@
       effect(() => {
         document.querySelector('#app').innerHTML = obj.name;
       });
+
+      setTimeout(() => {
+        obj.name = 'lisi2';
+      }, 1000);
     </script>
   </body>
 </html>
