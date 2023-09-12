@@ -1,5 +1,7 @@
+import { ComputedRefImpl } from './computed';
 import { createDep, Dep } from './dep';
 
+export type EffectScheduler = (...args: any[]) => any;
 type KeyToDepMap = Map<any, Dep>;
 /**
  * key: 响应式对象
@@ -18,7 +20,11 @@ export function effect<T = any>(fn: () => T) {
 
 export let activeEffect: ReactiveEffect | undefined;
 export class ReactiveEffect<T = any> {
-  constructor(public fn: () => T) {}
+  computed?: ComputedRefImpl<T>;
+  constructor(
+    public fn: () => T,
+    public scheduler: EffectScheduler | null = null
+  ) {}
 
   run() {
     // 全局定义当前激活的 ReactiveEffect 实例
@@ -81,5 +87,9 @@ export function triggerEffects(dep: Dep) {
  * 触发指定依赖（者）
  */
 export function triggerEffect(effect: ReactiveEffect) {
-  effect.run();
+  if (effect.scheduler) {
+    effect;
+  } else {
+    effect.run();
+  }
 }
