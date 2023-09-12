@@ -88,7 +88,7 @@ export function triggerEffects(dep: Dep) {
  */
 export function triggerEffect(effect: ReactiveEffect) {
   if (effect.scheduler) {
-    effect;
+    effect.scheduler();
   } else {
     effect.run();
   }
