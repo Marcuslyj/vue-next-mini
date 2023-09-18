@@ -6,3 +6,5 @@ export const hasChanged = (value: any, oldValue: any): boolean =>
 
 export const isFunction = (value: unknown): value is Function =>
   typeof value === 'function';
+
+export const extend = Object.assign;

@@ -1,3 +1,4 @@
+import { extend } from '@vue/shared';
 import { ComputedRefImpl } from './computed';
 import { createDep, Dep } from './dep';
 
@@ -19,6 +20,11 @@ const targetMap = new WeakMap<any, KeyToDepMap>();
 
 export function effect<T = any>(fn: () => T, options?: ReactiveEffectOptions) {
   const _effect = new ReactiveEffect(fn);
+
+  if (options) {
+    extend(_effect, options); // options merge 到 effect 中， scheduler 等
+  }
+
   // 完成第一次 fn 函数的执行，懒执行
   if (!options || !options.lazy) {
     _effect.run();
@@ -48,7 +54,7 @@ export class ReactiveEffect<T = any> {
  * @param key
  */
 export function track(target: object, key: unknown) {
-  console.log('收集依赖', target, key);
+  // console.log('收集依赖', target, key);
   if (!activeEffect) return;
   let depsMap = targetMap.get(target);
   if (!depsMap) {
@@ -69,7 +75,7 @@ export function trackEffects(dep: Dep) {
 }
 
 export function trigger(target: object, key: unknown, newValue: unknown) {
-  console.log('触发更新', target, key, newValue);
+  // console.log('触发更新', target, key, newValue);
   const depsMap = targetMap.get(target);
   if (!depsMap) return;
 
