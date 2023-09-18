@@ -3,6 +3,11 @@ import { createDep, Dep } from './dep';
 
 export type EffectScheduler = (...args: any[]) => any;
 type KeyToDepMap = Map<any, Dep>;
+
+export interface ReactiveEffectOptions {
+  lazy?: boolean;
+  scheduler?: EffectScheduler;
+}
 /**
  * key: 响应式对象
  * value：Map 对象{
@@ -12,10 +17,12 @@ type KeyToDepMap = Map<any, Dep>;
  */
 const targetMap = new WeakMap<any, KeyToDepMap>();
 
-export function effect<T = any>(fn: () => T) {
+export function effect<T = any>(fn: () => T, options?: ReactiveEffectOptions) {
   const _effect = new ReactiveEffect(fn);
-  // 完成第一次 fn 函数的执行
-  _effect.run();
+  // 完成第一次 fn 函数的执行，懒执行
+  if (!options || !options.lazy) {
+    _effect.run();
+  }
 }
 
 export let activeEffect: ReactiveEffect | undefined;
