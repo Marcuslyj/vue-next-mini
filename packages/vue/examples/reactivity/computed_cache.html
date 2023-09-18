@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      const { effect, computed, reactive } = Vue;
+
+      const obj = reactive({ name: 'zhangsan' });
+
+      // computed 的执行会创建ComputedRefImpl实例，该构造函数会创建ReactiveEffect实例
+      const computedBbj = computed(() => {
+        console.log('计算属性执行');
+        return '姓名：' + obj.name;
+      });
+
+      // effect 执行就会创建一个ReactiveEffect实例，并执行一次run，就会收集该实例
+      effect(() => {
+        // dirty get 会触发 computed effect 的 run 方法，就会收集
+        document.querySelector('#app').innerHTML = computedBbj.value;
+        document.querySelector('#app').innerHTML = computedBbj.value;
+      });
+
+      setTimeout(() => {
+        obj.name = 'lisi';
+      }, 1000);
+    </script>
+  </body>
+</html>

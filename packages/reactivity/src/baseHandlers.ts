@@ -3,7 +3,7 @@ import { track, trigger } from './effect';
 const get = createGetter();
 function createGetter() {
   return function get(target: any, key: string | symbol, receiver: object) {
-    // get值
+    // get值，Reflect操作的作用是什么？
     const res = Reflect.get(target, key, receiver);
 
     //  收集依赖
@@ -21,7 +21,7 @@ function createSetter() {
     value: unknown,
     receiver: object
   ) {
-    // set值
+    // set值, Reflect操作的作用是什么？
     const result = Reflect.set(target, key, value, receiver);
 
     //  触发副作用函数

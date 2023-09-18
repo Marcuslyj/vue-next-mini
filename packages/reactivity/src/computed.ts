@@ -35,6 +35,9 @@ export class ComputedRefImpl<T> {
     trackRefValue(this);
     if (this._dirty) {
       this._dirty = false;
+      // 这里运行，reactive obj 就收集到this.effect，
+      // 后续reactive obj变化，就会触发 scheduler，标记 dirty
+      // 然后再triggerRefValue，就再次执行到（使用到计算属性的）副作用函数，dirty，重新计算值
       this._value = this.effect.run();
     }
     return this._value;

@@ -78,8 +78,16 @@ export function trigger(target: object, key: unknown, newValue: unknown) {
 export function triggerEffects(dep: Dep) {
   const effects = Array.isArray(dep) ? dep : [...dep];
 
+  // 先执行计算属性的effect，防止进入死循环
   for (const effect of effects) {
-    triggerEffect(effect);
+    if (effect.computed) {
+      triggerEffect(effect);
+    }
+  }
+  for (const effect of effects) {
+    if (!effect.computed) {
+      triggerEffect(effect);
+    }
   }
 }
 

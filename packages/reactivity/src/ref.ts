@@ -37,7 +37,7 @@ class RefImpl<T> {
 
   get value() {
     // 收集依赖
-    trackRefValue(this); // 复杂数据类型为什么需要这个操作？
+    trackRefValue(this); // 复杂数据类型为什么需要这个操作？set value的时候，需要 手动trigger！
     return this._value;
   }
 
