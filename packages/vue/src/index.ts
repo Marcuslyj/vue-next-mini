@@ -1,2 +1,2 @@
 export { reactive, effect, ref, computed } from '@vue/reactivity';
-export { queuePreFlushCb } from '@vue/compiler-core';
+export { queuePreFlushCb } from '@vue/runtime-core';

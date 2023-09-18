@@ -1,2 +1,1 @@
-const a = '2';
-const b = { a: 1, b: 2 };
+export { queuePreFlushCb } from '../../runtime-core/src/scheduler';
