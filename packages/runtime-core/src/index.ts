@@ -1,1 +1,2 @@
-export { queuePreFlushCb } from '../../runtime-core/src/scheduler';
+export { queuePreFlushCb } from './scheduler';
+export { watch } from './apiWatch';

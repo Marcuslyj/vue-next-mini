@@ -45,6 +45,8 @@ export class ReactiveEffect<T = any> {
     // 执行 fn 会触发 getter
     return this.fn();
   }
+
+  stop() {}
 }
 
 /**
