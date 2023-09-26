@@ -1,5 +1,5 @@
 import { queuePreFlushCb } from '@vue/runtime-core';
-import { EMPTY_OBJ, hasChanged } from '@vue/shared';
+import { EMPTY_OBJ, hasChanged, isObject } from '@vue/shared';
 import { ReactiveEffect } from 'packages/reactivity/src/effect';
 import { isReactive } from 'packages/reactivity/src/reactive';
 
@@ -31,7 +31,7 @@ function doWatch(
   if (cb && deep) {
     // TODO
     const baseGetter = getter;
-    getter = () => baseGetter();
+    getter = () => traverse(baseGetter());
   }
 
   let oldValue = {};
@@ -52,6 +52,7 @@ function doWatch(
     if (immediate) {
       job();
     } else {
+      // 这里的 oldValue有问题吧？返回的是同一个对象
       oldValue = effect.run();
     }
   } else {
@@ -60,4 +61,14 @@ function doWatch(
   return () => {
     effect.stop();
   };
+}
+
+export function traverse(value: unknown) {
+  if (!isObject(value)) return value;
+
+  for (const key in value as Record<string, unknown>) {
+    traverse((value as Record<string, unknown>)[key]);
+  }
+
+  return value;
 }
