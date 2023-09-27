@@ -29,7 +29,6 @@ function doWatch(
   }
 
   if (cb && deep) {
-    // TODO
     const baseGetter = getter;
     getter = () => traverse(baseGetter());
   }
