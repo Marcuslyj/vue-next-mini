@@ -1,4 +1,4 @@
-import { isArray, isFunction, isString } from '../../shared/src';
+import { isArray, isFunction, isObject, isString } from '../../shared/src';
 import { ShapeFlags } from '../../shared/src/shapeFlags';
 
 export interface VNode {
@@ -15,8 +15,11 @@ export function isVNode(value: any): value is VNode {
 
 export function createVNode(type, props, children) {
   // dom类型
-  // 字符串，就是 ELEMENT，否则先置为 0
-  const shapeFlag = isString(type) ? ShapeFlags.ELEMENT : 0;
+  const shapeFlag = isString(type)
+    ? ShapeFlags.ELEMENT // 字符串，就是 element
+    : isObject(type) // // 对象，就是 component
+    ? ShapeFlags.STATEFUL_COMPONENT
+    : 0;
 
   return createBaseVNode(type, props, children, shapeFlag);
 }
