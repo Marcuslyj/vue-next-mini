@@ -1,5 +1,5 @@
-import { isArray, isFunction, isString } from '.';
-import { ShapeFlags } from './shapeFlags';
+import { isArray, isFunction, isString } from '../../shared/src';
+import { ShapeFlags } from '../../shared/src/shapeFlags';
 
 export interface VNode {
   __v_isVNode: true;
@@ -14,6 +14,7 @@ export function isVNode(value: any): value is VNode {
 }
 
 export function createVNode(type, props, children) {
+  // dom类型
   // 字符串，就是 ELEMENT，否则先置为 0
   const shapeFlag = isString(type) ? ShapeFlags.ELEMENT : 0;
 
@@ -40,6 +41,7 @@ export function normalizeChildren(vnode: VNode, children: unknown) {
   if (children == null) {
     children = null;
   } else if (isArray(children)) {
+    type = ShapeFlags.ARRAY_CHILDREN;
   } else if (typeof children === 'object') {
   } else if (isFunction(children)) {
   } else {
@@ -49,5 +51,6 @@ export function normalizeChildren(vnode: VNode, children: unknown) {
   }
 
   vnode.children = children;
+  // dom类型叠加 children 类型
   vnode.shapeFlag |= type;
 }
