@@ -1,6 +1,10 @@
+import { normalizeClass } from 'packages/shared/src/normalizeProp';
 import { isArray, isFunction, isObject, isString } from '../../shared/src';
 import { ShapeFlags } from '../../shared/src/shapeFlags';
 
+export const Fragment = Symbol('Fragment');
+export const Text = Symbol('Text');
+export const Comment = Symbol('Comment');
 export interface VNode {
   __v_isVNode: true;
   type: any;
@@ -14,6 +18,13 @@ export function isVNode(value: any): value is VNode {
 }
 
 export function createVNode(type, props, children) {
+  if (props) {
+    const { class: klass, style } = props;
+    if (klass && !isString(klass)) {
+      props.class = normalizeClass(klass);
+    }
+  }
+
   // dom类型
   const shapeFlag = isString(type)
     ? ShapeFlags.ELEMENT // 字符串，就是 element
