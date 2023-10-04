@@ -83,4 +83,8 @@ function baseCreateRenderer(options: RendererOptions) {
     }
     container._vnode = vnode;
   };
+
+  return {
+    render
+  };
 }
