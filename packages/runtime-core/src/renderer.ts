@@ -1,7 +1,7 @@
 import { EMPTY_OBJ } from '@vue/shared';
 import { patchProp } from 'packages/runtime-dom/src/patchProp';
 import { ShapeFlags } from 'packages/shared/src/shapeFlags';
-import { Fragment } from './vnode';
+import { Fragment, isSameVNodeType } from './vnode';
 
 export interface RendererOptions {
   /**
@@ -14,6 +14,7 @@ export interface RendererOptions {
   setElementText(node: Element, text: string): void;
   insert(el, parent: Element, anchor?): void;
   createElement(type: string);
+  remove(el: Element);
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -25,7 +26,8 @@ function baseCreateRenderer(options: RendererOptions) {
     insert: hostInsert,
     patchProp: hostPatchProp,
     createElement: hostCreateElement,
-    setElementText: hostSetElementText
+    setElementText: hostSetElementText,
+    remove: hostRemove
   } = options;
 
   const processElement = (oldVNode, newVNode, container, anchor) => {
@@ -127,6 +129,11 @@ function baseCreateRenderer(options: RendererOptions) {
       return;
     }
 
+    if (oldVNode && !isSameVNodeType(oldVNode, newVNode)) {
+      unmount(oldVNode);
+      oldVNode = null;
+    }
+
     const { type, shapeFlag } = newVNode;
 
     switch (type) {
@@ -142,6 +149,10 @@ function baseCreateRenderer(options: RendererOptions) {
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
         }
     }
+  };
+
+  const unmount = (vnode) => {
+    hostRemove(vnode.el);
   };
 
   const render = (vnode, container) => {
