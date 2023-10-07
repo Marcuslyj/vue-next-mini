@@ -13,5 +13,9 @@ export const nodeOps = {
     if (parent) {
       parent.removeChild(child);
     }
+  },
+  createText: (text: string) => document.createTextNode(text),
+  setText(node, text: string) {
+    node.nodeValue = text;
   }
 };

@@ -15,6 +15,8 @@ export interface RendererOptions {
   insert(el, parent: Element, anchor?): void;
   createElement(type: string);
   remove(el: Element);
+  createText(text: string);
+  setText(node: Text, text: string): void;
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -27,8 +29,22 @@ function baseCreateRenderer(options: RendererOptions) {
     patchProp: hostPatchProp,
     createElement: hostCreateElement,
     setElementText: hostSetElementText,
-    remove: hostRemove
+    remove: hostRemove,
+    createText: hostCreateText,
+    setText: hostSetText
   } = options;
+
+  const processText = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      newVNode.el = hostCreateText(newVNode.children as string);
+      hostInsert(newVNode.el, container, anchor);
+    } else {
+      const el = (newVNode.el = oldVNode.el);
+      if (newVNode.children !== oldVNode.children) {
+        hostSetText(el, newVNode.children as string);
+      }
+    }
+  };
 
   const processElement = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
@@ -138,6 +154,7 @@ function baseCreateRenderer(options: RendererOptions) {
 
     switch (type) {
       case Text:
+        processText(oldVNode, newVNode, container, anchor);
         break;
       case Comment:
         break;
