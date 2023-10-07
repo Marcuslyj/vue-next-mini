@@ -1,6 +1,7 @@
-import { EMPTY_OBJ } from '@vue/shared';
+import { EMPTY_OBJ, isString } from '@vue/shared';
 import { patchProp } from 'packages/runtime-dom/src/patchProp';
 import { ShapeFlags } from 'packages/shared/src/shapeFlags';
+import { normalizeVNode } from './componentRenderUtils';
 import { Fragment, isSameVNodeType } from './vnode';
 
 export interface RendererOptions {
@@ -17,6 +18,8 @@ export interface RendererOptions {
   remove(el: Element);
   createText(text: string);
   setText(node: Text, text: string): void;
+  createComment(text: string);
+  setComment(node: Text, text: string): void;
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -31,8 +34,26 @@ function baseCreateRenderer(options: RendererOptions) {
     setElementText: hostSetElementText,
     remove: hostRemove,
     createText: hostCreateText,
-    setText: hostSetText
+    setText: hostSetText,
+    createComment: hostCreateComment
   } = options;
+
+  const processFragment = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      mountChildren(newVNode.children, container, anchor);
+    } else {
+      patchChildren(oldVNode, newVNode, container, anchor);
+    }
+  };
+
+  const processComment = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      newVNode.el = hostCreateComment(newVNode.children as string);
+      hostInsert(newVNode.el, container, anchor);
+    } else {
+      newVNode.el = oldVNode.el;
+    }
+  };
 
   const processText = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
@@ -82,6 +103,16 @@ function baseCreateRenderer(options: RendererOptions) {
 
     patchChildren(oldVNode, newVNode, el, null);
     patchProps(el, newVNode, oldProps, newProps);
+  };
+
+  const mountChildren = (children, container, anchor) => {
+    if (isString(children)) {
+      children = children.split('');
+    }
+    for (let index = 0; index < children.length; index++) {
+      const child = (children[index] = normalizeVNode(children[index]));
+      patch(null, child, container, anchor);
+    }
   };
 
   const patchChildren = (oldVNode, newVNode, container, anchor) => {
@@ -157,8 +188,10 @@ function baseCreateRenderer(options: RendererOptions) {
         processText(oldVNode, newVNode, container, anchor);
         break;
       case Comment:
+        processComment(oldVNode, newVNode, container, anchor);
         break;
       case Fragment:
+        processFragment(oldVNode, newVNode, container, anchor);
         break;
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
